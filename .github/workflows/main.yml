@@ -9,13 +9,11 @@ on:
 
   workflow_dispatch:
 
-# Required permissions for GitHub Pages deployment
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Prevent multiple deployments from running at the same time
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -40,12 +38,16 @@ jobs:
         working-directory: frontend
         run: npm ci
 
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
       - name: Build frontend
         working-directory: frontend
         run: npm run build
 
-      - name: Setup GitHub Pages
-        uses: actions/configure-pages@v5
+      # GitHub Pages needs a 404 fallback for React Router
+      - name: Create SPA fallback
+        run: cp frontend/dist/index.html frontend/dist/404.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -56,6 +58,7 @@ jobs:
     name: Deploy to GitHub Pages
     needs: build
     runs-on: ubuntu-latest
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
