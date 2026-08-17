@@ -7,7 +7,7 @@ import Profile from "./pages/Profile/Profile";
 import Stats from "./pages/Stats/Stats";
 import Settings from "./pages/Settings/Settings";
 export default function App() {
-    return (<BrowserRouter>
+    return (<BrowserRouter basename="/digital_logbook">
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace/>}/>
         <Route path="/login" element={<Login />}/>
