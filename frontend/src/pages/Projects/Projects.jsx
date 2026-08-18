@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
+import ProjectModal from "../../components/ProjectModal";
 export default function Projects() {
     const [collapsed, setCollapsed] = useState(false);
     const [tab, setTab] = useState("active");
@@ -11,6 +12,7 @@ export default function Projects() {
     const [dateTo, setDateTo] = useState("");
     const [hoursMin, setHoursMin] = useState("");
     const [hoursMax, setHoursMax] = useState("");
+    const [showProjectModal, setShowProjectModal] = useState(false);
     const navigate = useNavigate();
     const hasDateFilter = dateFrom || dateTo;
     const hasHoursFilter = hoursMin || hoursMax;
@@ -34,7 +36,7 @@ export default function Projects() {
             <p className="page-header-eyebrow">Projects</p>
             <h1 className="page-header-title">My Projects</h1>
           </div>
-          <button className="btn btn-primary" onClick={() => { }}>
+          <button className="btn btn-primary" onClick={() => setShowProjectModal(true)}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
@@ -144,10 +146,18 @@ export default function Projects() {
 
           {/* Project list */}
           <div className="projects-list">
-            {tab === "active" ? (<ActiveEmptyState onNew={() => { }}/>) : (<ArchivedEmptyState />)}
+            {tab === "active" ? (<ActiveEmptyState onNew={() => setShowProjectModal(true)}/>) : (<ArchivedEmptyState />)}
           </div>
         </div>
       </main>
+
+      {showProjectModal && (
+        <ProjectModal
+          mode="create"
+          onClose={() => setShowProjectModal(false)}
+          onSave={() => setShowProjectModal(false)}
+        />
+      )}
 
       {/* Close dropdowns on outside click */}
       {(showDatePicker || showHoursFilter) && (<div className="dropdown-backdrop" onClick={() => { setShowDatePicker(false); setShowHoursFilter(false); }}/>)}
