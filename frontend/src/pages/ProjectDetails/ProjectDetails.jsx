@@ -12,6 +12,8 @@ export default function ProjectDetails() {
     const [collapsed, setSidebarCollapsed] = useState(false);
     const [showEntryModal, setShowEntryModal] = useState(false);
     const [showProjectModal, setShowProjectModal] = useState(false);
+    // Replace this with the project entries returned by the backend.
+    const [entries, setEntries] = useState([]);
     const navigate = useNavigate();
     return (<div className="app-shell">
       <Sidebar collapsed={collapsed} onToggle={() => setSidebarCollapsed((c) => !c)}/>
@@ -92,18 +94,20 @@ export default function ProjectDetails() {
       {/* New Entry Modal */}
       {showEntryModal && (<NewEntryModal onClose={() => setShowEntryModal(false)}/>)}
 
-      {/* Edit Project Modal */}
+      {/* Edit Project = choose and edit an existing project entry */}
       {showProjectModal && (
         <ProjectModal
           mode="edit"
-          project={{
-            name: "Project name",
-            description: "",
-            startDate: "",
-            endDate: "",
-          }}
+          entries={entries}
           onClose={() => setShowProjectModal(false)}
-          onSave={() => setShowProjectModal(false)}
+          onSave={(result) => {
+            if (result?.type === "entry" && result.entry) {
+              setEntries((current) =>
+                current.map((entry) => entry.id === result.entry.id ? result.entry : entry)
+              );
+            }
+            setShowProjectModal(false);
+          }}
         />
       )}
 
