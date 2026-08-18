@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
+import ProjectModal from "../../components/ProjectModal";
 const FIELD_TYPES = [
     { value: "text", label: "Short text" },
     { value: "textarea", label: "Long text" },
@@ -10,6 +11,7 @@ const FIELD_TYPES = [
 export default function ProjectDetails() {
     const [collapsed, setSidebarCollapsed] = useState(false);
     const [showEntryModal, setShowEntryModal] = useState(false);
+    const [showProjectModal, setShowProjectModal] = useState(false);
     const navigate = useNavigate();
     return (<div className="app-shell">
       <Sidebar collapsed={collapsed} onToggle={() => setSidebarCollapsed((c) => !c)}/>
@@ -39,7 +41,7 @@ export default function ProjectDetails() {
               <IconArchive />
               Archive
             </button>
-            <button className="btn btn-secondary" onClick={() => { }}>
+            <button className="btn btn-secondary" onClick={() => setShowProjectModal(true)}>
               <IconEdit />
               Edit Project
             </button>
@@ -89,6 +91,21 @@ export default function ProjectDetails() {
 
       {/* New Entry Modal */}
       {showEntryModal && (<NewEntryModal onClose={() => setShowEntryModal(false)}/>)}
+
+      {/* Edit Project Modal */}
+      {showProjectModal && (
+        <ProjectModal
+          mode="edit"
+          project={{
+            name: "Project name",
+            description: "",
+            startDate: "",
+            endDate: "",
+          }}
+          onClose={() => setShowProjectModal(false)}
+          onSave={() => setShowProjectModal(false)}
+        />
+      )}
 
       <style>{`
         .app-shell {
